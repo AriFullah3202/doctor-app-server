@@ -16,11 +16,38 @@ console.log(uri)
 async function run() {
     try {
         const AppointmentCollection = client.db('doctors-site-db').collection('AppointmentOptions')
+        const bookingsCollection = client.db('doctors-site-db').collection('Bookings')
+
+        //use Aggregation to query multiple collection and then merge data
         app.get('/appointmentOptions', async (req, res) => {
             const query = {};
+            const date = req.query.date
+            console.log(date)
             const options = await AppointmentCollection.find(query).toArray()
+            // amara chai perticular date e and perticular appiontment e booking time ekta hoye gele available booking time koita ache dekhno
+            // eijonno prothome amra booking collection er moddhe data take nibo and database theke query nite hbe
+            // prothome date query korlam 
+            const bookingQuery = { appointmentDate: date }
+            //ekhane date k pelam
+            const alreadyBooked = await bookingsCollection.find(bookingQuery).toArray()
+            console.log(alreadyBooked)
+            options.forEach(option => {
+                const optionBooked = alreadyBooked.filter(book => book.treatment === option.name)
+                console.log(optionBooked)
+                const bookedSlots = optionBooked.map(book => book.slot)
+                const remainingSlots = option.slots.filter(slot => !bookedSlots.includes(slot));
+                option.slots = remainingSlots;
+                console.log(date, option.name, remainingSlots.length)
+            })
 
             res.send(options);
+        })
+        app.post('/bookings', async (req, res) => {
+            const bookings = req.body;
+            console.log(bookings)
+            const result = await bookingsCollection.insertOne(bookings);
+            res.send(result)
+
         })
 
     }

@@ -32,3 +32,9 @@ app.listen(port, () => { console.log(`server is running the port ${port}`) })
        1. in project root create file .env
        2. then include the line in index.js
        3.   
+4.   API Naming Convention
+       1. app.get('/bookings')
+       2. app.get('/bookings/:id')
+       3. app.post('/bookings')
+       4. app.patch('/bookings/:id')
+       5. app.delete('/bookings/:id')
