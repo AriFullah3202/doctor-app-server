@@ -1,7 +1,8 @@
 const express = require('express')
 const cors = require('cors')
 const { MongoClient, ServerApiVersion } = require('mongodb');
-require('dotenv').config()
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 const app = (express())
 const port = process.env.PORT || 5000
 //middleware
@@ -18,6 +19,21 @@ async function run() {
         const AppointmentCollection = client.db('doctors-site-db').collection('AppointmentOptions')
         const bookingsCollection = client.db('doctors-site-db').collection('Bookings')
         const usersCollection = client.db('doctors-site-db').collection('User')
+
+        app.get('/jwt', async (req, res) => {
+            const email = req.query.email
+            const query = { email: email };
+            const user = await usersCollection.findOne(query)
+            console.log(user)
+            if (user) {
+                const token = jwt.sign({ email }, process.env.ACCESS_TOKEN, { expiresIn: '5h' })
+                console.log(token)
+                return res.send({ accessToken: token })
+            }
+
+            res.status(403).send({ accessToken: '' })
+        })
+
         app.post("/user", async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
