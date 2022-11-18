@@ -38,3 +38,17 @@ app.listen(port, () => { console.log(`server is running the port ${port}`) })
        3. app.post('/bookings')
        4. app.patch('/bookings/:id')
        5. app.delete('/bookings/:id')
+
+5. ekhane ekta document er moddhe ekta field k update korchi
+       1. first id diye capture kora
+       2. then const option = {upsert : true }
+           er mane jodi field na thake field insert kora 
+           jodi field thake kichu korbe na
+       3. const updateDoc = {
+               $set : {
+                       role : 'admin'
+               }
+       } 
+       //role field k save korbe 
+       updateOne 3ta parameter nibe
+6. 
