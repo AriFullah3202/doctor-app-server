@@ -42,6 +42,13 @@ async function run() {
             const users = await usersCollection.find(query).toArray();
             res.send(users);
         })
+        app.get('/users/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            console.log(email)
+            const query = { email: email }
+            const user = await usersCollection.findOne(query)
+            res.send({ isAdmin: user ?.role === 'admin'})
+        })
         app.put('/users/admin/:id', verifyJWT, async (req, res) => {
             const decodedEmail = req.decoded.email;
             const query = { email: decodedEmail };
