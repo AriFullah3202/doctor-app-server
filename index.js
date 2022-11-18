@@ -14,11 +14,34 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 console.log(uri)
 
+
+function verifyJWT(req, res, next) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        return res.status(401).send({ message: 'unauthorized access' })
+    }
+    const token = authHeader.split(' ')[1]
+    jwt.verify(token, process.env.ACCESS_TOKEN, (err, decoded) => {
+        if (err) {
+            return res.status(403).send({ message: 'unauthorized access' })
+        }
+        req.decoded = decoded;
+        next();
+    })
+
+}
+
 async function run() {
     try {
         const AppointmentCollection = client.db('doctors-site-db').collection('AppointmentOptions')
         const bookingsCollection = client.db('doctors-site-db').collection('Bookings')
         const usersCollection = client.db('doctors-site-db').collection('User')
+
+        app.get('/users', async (req, res) => {
+            const query = {}
+            const users = await usersCollection.find(query).toArray();
+            res.send(users);
+        })
 
         app.get('/jwt', async (req, res) => {
             const email = req.query.email
@@ -41,8 +64,13 @@ async function run() {
         })
 
 
-        app.get('/bookings', async (req, res) => {
+        app.get('/bookings', verifyJWT, async (req, res) => {
             const email = req.query.email;
+            const decodedEmail = req.decoded.email;
+            if (email !== decodedEmail) {
+                return res.status(403).send({ messsge: 'forbidden access' })
+            }
+            console.log(req.headers.authorization)
             const query = { email: email }
             const bookings = await bookingsCollection.find(query).toArray()
             console.log(bookings)
