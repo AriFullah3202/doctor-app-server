@@ -36,6 +36,8 @@ async function run() {
         const AppointmentCollection = client.db('doctors-site-db').collection('AppointmentOptions')
         const bookingsCollection = client.db('doctors-site-db').collection('Bookings')
         const usersCollection = client.db('doctors-site-db').collection('User')
+        const doctorsCollection = client.db('doctors-site-db').collection('doctors')
+
 
         app.get('/users', async (req, res) => {
             const query = {}
@@ -146,6 +148,25 @@ async function run() {
             const result = await bookingsCollection.insertOne(bookings);
             res.send(result)
 
+        })
+        //add a doctor
+        app.post('/doctors', async (req, res) => {
+            const doctor = req.body;
+            const result = await doctorsCollection.insertOne(doctor)
+            res.send(result)
+        })
+        // get a doctor
+        app.get('/doctors', async (req, res) => {
+            const query = {}
+            const result = await doctorsCollection.find(query).toArray();
+            console.log(result)
+            res.send(result)
+        })
+        app.delete('/doctors', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) }
+            const result = await doctorsCollection.deleteOne(filter)
+            res.send(result)
         })
 
     }

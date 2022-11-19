@@ -56,3 +56,7 @@ app.listen(port, () => { console.log(`server is running the port ${port}`) })
        eti true and false return korbe
 
 7.     in  this api fetch one field from one document
+8.     git push catche
+        git push https://github.com/AriFullah3202/dorctor-app-client.git
+        git config credential.helper store
+
