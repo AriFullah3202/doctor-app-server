@@ -60,3 +60,10 @@ app.listen(port, () => { console.log(`server is running the port ${port}`) })
         git push https://github.com/AriFullah3202/dorctor-app-client.git
         git config credential.helper store
 
+9.    amra r ekta middleware use korbo
+      ekta route e ekhdik middleware use korte pari
+      tobe ektar por ekta use korbo
+      ektar condition sesh hole r ektar condition sesh hbe
+      ekta middileware hocche jwttoken valid kina
+      r ekta middleware hocche userCollection er moddhe admin kina check kora
+
