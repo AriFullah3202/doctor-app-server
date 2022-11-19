@@ -54,3 +54,5 @@ app.listen(port, () => { console.log(`server is running the port ${port}`) })
 6.     Email diye chenk korlam user tir role admin 
        res.send({ isAdmin: user ?.role === 'admin'})
        eti true and false return korbe
+
+7.     in  this api fetch one field from one document

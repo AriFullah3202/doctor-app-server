@@ -44,7 +44,6 @@ async function run() {
         })
         app.get('/users/admin/:email', async (req, res) => {
             const email = req.params.email;
-            console.log(email)
             const query = { email: email }
             const user = await usersCollection.findOne(query)
             res.send({ isAdmin: user ?.role === 'admin'})
@@ -76,7 +75,6 @@ async function run() {
             console.log(user)
             if (user) {
                 const token = jwt.sign({ email }, process.env.ACCESS_TOKEN, { expiresIn: '5h' })
-                console.log(token)
                 return res.send({ accessToken: token })
             }
 
@@ -125,6 +123,11 @@ async function run() {
             })
 
             res.send(options);
+        })
+        app.get('/appointmentSpeciality', async (req, res) => {
+            const query = {}
+            const result = await AppointmentCollection.find(query).project({ name: 1 }).toArray();
+            res.send(result);
         })
         app.post('/bookings', async (req, res) => {
             const bookings = req.body;
