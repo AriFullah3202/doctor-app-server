@@ -16,6 +16,8 @@ console.log(uri)
 
 
 function verifyJWT(req, res, next) {
+
+    console.log('From ', req.method, req.originalUrl)
     const authHeader = req.headers.authorization;
     if (!authHeader) {
         return res.status(401).send({ message: 'unauthorized access' })
@@ -74,11 +76,27 @@ async function run() {
             res.send(result);
         })
 
+        // it is for temporary
+        //temporary to update price field on appointmentOptions
+        // app.get('/addPrice', async (req, res) => {
+        //     //ei line amra sob field k update korbo
+        //     const filter = {}
+        //     //ei line e kono field jodi na thake thahole add korbe na hole
+        //     //r jodi thake thahole add korbe na
+        //     const options = { upsert: true }
+        //     const updateDoc = {
+        //         $set: {
+        //             price: 99
+        //         }
+        //     }
+        //     const result = await AppointmentCollection.updateMany(filter, updateDoc, options)
+        //     res.send(result)
+        // })
+
         app.get('/jwt', async (req, res) => {
             const email = req.query.email
             const query = { email: email };
             const user = await usersCollection.findOne(query)
-            console.log(user)
             if (user) {
                 const token = jwt.sign({ email }, process.env.ACCESS_TOKEN, { expiresIn: '5h' })
                 return res.send({ accessToken: token })
@@ -103,16 +121,19 @@ async function run() {
             console.log(req.headers.authorization)
             const query = { email: email }
             const bookings = await bookingsCollection.find(query).toArray()
-            console.log(bookings)
             res.send(bookings);
         })
-
+        app.get('/booking/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await bookingsCollection.findOne(query)
+            res.send(result)
+        })
 
         //use Aggregation to query multiple collection and then merge data
         app.get('/appointmentOptions', async (req, res) => {
             const query = {};
             const date = req.query.date
-            console.log(date)
             const options = await AppointmentCollection.find(query).toArray()
             // amara chai perticular date e and perticular appiontment e booking time ekta hoye gele available booking time koita ache dekhno
             // eijonno prothome amra booking collection er moddhe data take nibo and database theke query nite hbe
@@ -148,11 +169,11 @@ async function run() {
                 // ei block e return kore dile niche r jabe na
                 return res.send({ acknowledged: false, message })
             }
-            console.log(bookings)
             const result = await bookingsCollection.insertOne(bookings);
             res.send(result)
 
         })
+
         //add a doctor
         app.post('/doctors', verifyJWT, verifyAdmin, async (req, res) => {
             const doctor = req.body;
@@ -163,11 +184,12 @@ async function run() {
         app.get('/doctors', verifyJWT, verifyAdmin, async (req, res) => {
             const query = {}
             const result = await doctorsCollection.find(query).toArray();
-            console.log(result)
             res.send(result)
         })
-        app.delete('/doctors', verifyJWT, verifyAdmin, async (req, res) => {
+        app.delete('/doctors/:id', verifyJWT, verifyAdmin, async (req, res) => {
+
             const id = req.params.id;
+            console.log('this is delete route id', id)
             const filter = { _id: ObjectId(id) }
             const result = await doctorsCollection.deleteOne(filter)
             res.send(result)
