@@ -8,6 +8,7 @@ const port = process.env.PORT || 5000
 //middleware
 app.use(cors())
 app.use(express.json());
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.wg8wdsp.mongodb.net/?retryWrites=true&w=majority`;
@@ -173,13 +174,32 @@ async function run() {
             res.send(result)
 
         })
+        //create payment intention mane payment korar iccaha
+        app.post('/create-payment-intent', async (req, res) => {
+            const booking = req.body;
+            const price = booking.price
+            const amount = price * 100;
 
-        //add a doctor
-        app.post('/doctors', verifyJWT, verifyAdmin, async (req, res) => {
-            const doctor = req.body;
-            const result = await doctorsCollection.insertOne(doctor)
-            res.send(result)
+            const paymentIntent = await stripe.paymentIntents.create({
+                currency: 'usd',
+                amount: amount,
+                'payment_method_types': [
+                    "card"
+                ]
+
+            })
+            res.send({
+                clientSecret: paymentIntent.client_secret,
+            })
         })
+        app.
+
+            //add a doctor
+            app.post('/doctors', verifyJWT, verifyAdmin, async (req, res) => {
+                const doctor = req.body;
+                const result = await doctorsCollection.insertOne(doctor)
+                res.send(result)
+            })
         // get a doctor
         app.get('/doctors', verifyJWT, verifyAdmin, async (req, res) => {
             const query = {}

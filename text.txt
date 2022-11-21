@@ -66,4 +66,14 @@ app.listen(port, () => { console.log(`server is running the port ${port}`) })
       ektar condition sesh hole r ektar condition sesh hbe
       ekta middileware hocche jwttoken valid kina
       r ekta middleware hocche userCollection er moddhe admin kina check kora
+10. To use Payment 
+      
+    ==========server side============
+    //ei documentation er moddhe devloper tools > QuickStart > Node sj gele
+    // go to the visit https://stripe.com/docs/development/quickstart?lang=node
+    // go to visit https://stripe.com/docs/payments/quickstart
+    // and github link https://github.com/stripe/stripe-node
+    //for test mode copy the Secret key --this key is here https://dashboard.stripe.com/test/dashboard
+    //this key stored in .env named as STRIPE_SECRET_KEY = YOUR KEY
+
 
