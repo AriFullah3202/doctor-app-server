@@ -196,6 +196,19 @@ async function run() {
         app.post('/payments', async (req, res) => {
             const payment = req.body
             const result = await paymentsCollection.insertOne(payment)
+            // ekhane booking collection 2ta field add korbo
+            // ekta , onnota transactionid 
+
+            // payment hole paid true dehhabe
+            const id = payment.bookingId
+            const filter = { _id: ObjectId(id) }
+            const updateDoc = {
+                $set: {
+                    paid: true,
+                    transactionId: payment.transactionId
+                }
+            }
+            const updataResult = await bookingsCollection.updateOne(filter, updateDoc)
             res.send(result)
         })
         // add a doctor
