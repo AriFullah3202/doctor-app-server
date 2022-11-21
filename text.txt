@@ -75,5 +75,7 @@ app.listen(port, () => { console.log(`server is running the port ${port}`) })
     // and github link https://github.com/stripe/stripe-node
     //for test mode copy the Secret key --this key is here https://dashboard.stripe.com/test/dashboard
     //this key stored in .env named as STRIPE_SECRET_KEY = YOUR KEY
+    //your key is Secret key for server
+    // client side is publish key
 
 

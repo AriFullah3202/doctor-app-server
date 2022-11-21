@@ -40,6 +40,8 @@ async function run() {
         const bookingsCollection = client.db('doctors-site-db').collection('Bookings')
         const usersCollection = client.db('doctors-site-db').collection('User')
         const doctorsCollection = client.db('doctors-site-db').collection('doctors')
+        const paymentsCollection = client.db('doctors-site-db').collection('payments')
+
 
         const verifyAdmin = async (req, res, next) => {
             console.log("inside admin", req.decoded.email)
@@ -179,27 +181,29 @@ async function run() {
             const booking = req.body;
             const price = booking.price
             const amount = price * 100;
-
             const paymentIntent = await stripe.paymentIntents.create({
                 currency: 'usd',
                 amount: amount,
                 'payment_method_types': [
                     "card"
                 ]
-
             })
             res.send({
                 clientSecret: paymentIntent.client_secret,
             })
         })
-        app.
-
-            //add a doctor
-            app.post('/doctors', verifyJWT, verifyAdmin, async (req, res) => {
-                const doctor = req.body;
-                const result = await doctorsCollection.insertOne(doctor)
-                res.send(result)
-            })
+        // add payments tp db
+        app.post('/payments', async (req, res) => {
+            const payment = req.body
+            const result = await paymentsCollection.insertOne(payment)
+            res.send(result)
+        })
+        // add a doctor
+        app.post('/doctors', verifyJWT, verifyAdmin, async (req, res) => {
+            const doctor = req.body;
+            const result = await doctorsCollection.insertOne(doctor)
+            res.send(result)
+        })
         // get a doctor
         app.get('/doctors', verifyJWT, verifyAdmin, async (req, res) => {
             const query = {}
