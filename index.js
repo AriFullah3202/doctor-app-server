@@ -243,7 +243,7 @@ async function run() {
 run().catch(console.log)
 
 app.get("/", async (req, res) => {
-    res.send("doctors potal is running")
+    res.send("doctors potal is runningg")
 })
 
 app.listen(port, () => { console.log(`server is running the port ${port}`) })

@@ -78,4 +78,35 @@ app.listen(port, () => { console.log(`server is running the port ${port}`) })
     //your key is Secret key for server
     // client side is publish key
 
+11. vercel first deploy
+    1. eta vercel.json create korbe
+        paste korte hbe
 
+      {
+    "version": 2,
+    "builds": [
+        {
+            "src": "./index.js",
+            "use": "@vercel/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "/"
+        }
+    ]
+   }
+   2. y   
+   3. enter === enter dibo because github account check
+   4. n      === not because amra first time deploy korchi
+   5. then ekta name or enter
+   6. enter    === because ./ current directory kina ask korche
+   7. go to visit your website
+   8. https://vercel.com/arifullah3202/
+      1. in this website go to your deployed project 
+      2. then go to setting
+      3. then got to environment option 
+      4. then .env Secret key copy and paste and save it
+12. If you update the website or rebuild
+    1. vercel  =====just one command
